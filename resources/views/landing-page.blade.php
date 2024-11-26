@@ -474,31 +474,28 @@
         </div>
         
         <div class="row g-4">
-        @foreach($galeri as $item)
+        @foreach($galeri as $post)
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
                 <div class="card gallery-card h-100">
                     <div class="position-relative overflow-hidden">
-                        <img src="{{ $item->image ? url($item->image) : asset('images') }}" 
-                             class="card-img-top gallery-img" 
-                             alt="{{ $item->judul }}"
-                             style="height: 250px; object-fit: cover;">
-                        <div class="gallery-overlay">
+                    <img src="{{ $post->gambar ? asset($post->gambar) : asset('images') }}"
+                            class="card-img-top gallery-img" 
+                            alt="Thumbnail"
+                            style="height: 250px; object-fit: cover;">
+                            <div class="gallery-overlay">
                             <div class="p-4">
-                                <h5 class="text-white mb-2">{{ $item->judul }}</h5>
-                                <p class="text-white-50 mb-0">{{ Str::limit($item->deskripsi, 100) }}</p>
+                                <h5 class="text-black mb-2">{{ $post->judul }}</h5>
+                                <p class="text-black-50 mb-0">{{ Str::limit($post->isi, 100) }}</p>
                                 <div class="mt-3">
-                                    <small class="text-white-50">
+                                    <small class="text-black-50">
                                         <i class="fas fa-calendar me-2"></i>
-                                        {{ optional($item->created_at)->format('d M Y') }}
+                                        {{ $post->created_at->format('d M Y') }}
                                     </small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 text-center">
-                <p class="text-muted">Belum ada dokumentasi kegiatan yang tersedia.</p>
             </div>
             @endforeach
         </div>

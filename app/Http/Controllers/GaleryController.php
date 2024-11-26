@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Galery;
 use App\Models\Kategori;
+use App\Models\Post;
 use Illuminate\Support\Facades\Log;
 
 class GaleryController extends Controller
@@ -57,40 +58,38 @@ class GaleryController extends Controller
 
     public function edit($id)
     {
-        $post = Galery::findOrFail($id);
+        $post = Galery::findOrFail($id); // Pastikan model sesuai
         return view('admin.galeri.edit', compact('post'));
     }
+    
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'judul' => 'required',
-            'isi' => 'required',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'judul' => 'required|string|max:255',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-
+    
         $post = Galery::findOrFail($id);
-
+        $post->judul = $request->judul;
+    
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama
-            if (file_exists(public_path($post->gambar))) {
+            // Hapus gambar lama jika ada
+            if ($post->gambar && file_exists(public_path($post->gambar))) {
                 unlink(public_path($post->gambar));
             }
-            
-            $file = $request->file('gambar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads'), $filename);
-            
-            $post->gambar = 'uploads/' . $filename;
+    
+            // Simpan gambar baru
+            $imagePath = $request->file('gambar')->store('uploads/galeri', 'public');
+            $post->gambar = '/storage/' . $imagePath;
         }
-
-        $post->judul = $request->judul;
-        $post->isi = $request->isi;
+    
         $post->save();
-
-        return redirect()->route('galeri.index')
-            ->with('success', 'Gallery updated successfully');
+    
+        return redirect()->route('galeri.index')->with('success', 'Gallery updated successfully.');
     }
+    
+
 
     public function destroy($id)
     {

@@ -32,4 +32,11 @@ Route::group(['middleware' => 'auth:petugas', 'prefix' => 'admin'], function () 
     Route::resource('galeri', GaleryController::class);
     Route::resource('kategori', KategoriController::class);
     Route::resource('foto', FotoController::class);
+
+//admin galeri
+Route::get('/galeri/{id}/edit', [GaleryController::class, 'edit'])->name('galeri.edit');
+Route::put('/galeri/{id}', [GaleryController::class, 'update'])->name('galeri.update');
+
+
+
 });
